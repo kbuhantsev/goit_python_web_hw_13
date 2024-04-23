@@ -20,6 +20,7 @@ passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 python-multipart = "^0.0.9"
 fastapi-jwt-auth = "^0.5.0"
 libgravatar = "^1.0.4"
+fastapi-mail = "^1.4.1"
 
 
 [tool.poetry.group.dev.dependencies]

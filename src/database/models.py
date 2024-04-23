@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, func, Date, DateTime
+from sqlalchemy import Integer, String, func, Date, DateTime, Boolean
 
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, relationship
 from sqlalchemy.sql.schema import ForeignKey
@@ -19,6 +19,7 @@ class User(Base):
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     avatar: Mapped[str] = mapped_column(String(255), nullable=True)
     refresh_token: Mapped[str] = mapped_column(String(255), nullable=True, unique=True)
+    confirmed: Mapped[bool] = mapped_column(Boolean, default=False)
 
     def __repr__(self):
         return f'User(name={self.name}, email={self.email})'
