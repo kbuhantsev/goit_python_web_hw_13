@@ -8,7 +8,7 @@ from src.services.auth import auth_service
 
 conf = ConnectionConfig(
     MAIL_USERNAME="k.buhantsev@meta.ua",
-    MAIL_PASSWORD="Perfection!@&)",
+    MAIL_PASSWORD="",
     MAIL_FROM="k.buhantsev@meta.ua",
     MAIL_PORT=465,
     MAIL_SERVER="smtp.meta.ua",
