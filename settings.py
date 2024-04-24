@@ -27,6 +27,11 @@ class Settings(BaseSettings):
     redis_port: int = 6379
     redis_db: int = 0
 
+    # CLOUDINARY
+    cloudinary_name: str
+    cloudinary_api_key: str
+    cloudinary_api_secret: str
+
     @staticmethod
     def get_uri():
         return f"postgresql+asyncpg://{settings.user}:{settings.password}@{settings.domain}:{settings.port}/{settings.db_name}"

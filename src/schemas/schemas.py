@@ -36,9 +36,9 @@ class UserSchema(UserLoginSchema):
         from_attributes = True
 
 
-class UserResponseSchema(BaseModel):
-    user: UserSchema
-    detail: str = "User successfully created"
+# class UserResponseSchema(BaseModel):
+#     user: UserSchema
+#     detail: str = "User successfully created"
 
 
 class TokenModel(BaseModel):

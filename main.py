@@ -10,6 +10,7 @@ from src.database.db import get_db
 from src.routes.contacts import router as contacts_router
 from src.routes.tests import router as tests_router
 from src.routes.auth import router as auth_router
+from src.routes.users import router as users_router
 
 from fastapi_limiter import FastAPILimiter
 from fastapi_limiter.depends import RateLimiter
@@ -40,6 +41,7 @@ app.add_middleware(
 
 app.include_router(contacts_router, prefix='/api')
 app.include_router(auth_router, prefix='/api')
+app.include_router(users_router, prefix='/api')
 #
 app.include_router(tests_router, prefix='/api')
 
