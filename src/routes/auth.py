@@ -29,7 +29,7 @@ async def signup(body: UserSchema, background_tasks: BackgroundTasks, request: R
     #
     body.password = auth_service.get_password_hash(body.password)
     new_user = await create_user(body, db)
-    background_tasks.add_task(send_email, new_user.email, new_user.username, request.base_url)
+    background_tasks.add_task(send_email, new_user.email, new_user.name, request.base_url)
     return new_user
 
 
@@ -77,7 +77,7 @@ async def read_item(current_user: User = Depends(auth_service.get_current_user))
 
 
 @router.get('/confirmed_email/{token}')
-async def confirmed_email(token: str, db: AsyncSession = Depends(get_db)):
+async def confirmed_email_by_token(token: str, db: AsyncSession = Depends(get_db)):
     email = await auth_service.get_email_from_token(token)
     user = await get_user_by_email(email, db)
     if user is None:
@@ -92,9 +92,11 @@ async def confirmed_email(token: str, db: AsyncSession = Depends(get_db)):
 async def request_email(body: RequestEmail, background_tasks: BackgroundTasks, request: Request,
                         db: AsyncSession = Depends(get_db)):
     user = await get_user_by_email(body.email, db)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
 
     if user.confirmed:
         return {"message": "Your email is already confirmed"}
     if user:
-        background_tasks.add_task(send_email, user.email, user.username, request.base_url)
+        background_tasks.add_task(send_email, user.email, user.name, request.base_url)
     return {"message": "Check your email for confirmation."}

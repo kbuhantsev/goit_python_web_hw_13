@@ -9,12 +9,13 @@ from jose import JWTError, jwt
 
 from src.database.db import get_db
 from src.repository import users as repository_users
+from settings import settings
 
 
 class Auth:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    SECRET_KEY = "974790aec4ac460bdc11645decad4dce7c139b7f2982b7428ec44e886ea588c6"  # TODO прибрать в ENV файл
-    ALGORITHM = "HS256"
+    SECRET_KEY = settings.secret_key
+    ALGORITHM = settings.algorithm
 
     def verify_password(self, plain_password, hashed_password):
         return self.pwd_context.verify(plain_password, hashed_password)
@@ -30,7 +31,7 @@ class Auth:
         if expires_delta:
             expire = datetime.utcnow() + timedelta(seconds=expires_delta)
         else:
-            expire = datetime.utcnow() + timedelta(minutes=60)
+            expire = datetime.utcnow() + timedelta(minutes=settings.access_token_expire_minutes)
         to_encode.update({"iat": datetime.utcnow(), "exp": expire, "scope": "access_token"})
         encoded_access_token = jwt.encode(to_encode, self.SECRET_KEY, algorithm=self.ALGORITHM)
         return encoded_access_token
@@ -82,7 +83,7 @@ class Auth:
 
     def create_email_token(self, data: dict):
         to_encode = data.copy()
-        expire = datetime.now(timezone.utc) + timedelta(days=7)
+        expire = datetime.now(timezone.utc) + timedelta(days=1)
         to_encode.update({"iat": datetime.now(timezone.utc), "exp": expire})
         token = jwt.encode(to_encode, self.SECRET_KEY, algorithm=self.ALGORITHM)
         return token
