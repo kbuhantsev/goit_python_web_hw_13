@@ -11,7 +11,22 @@ from src.routes.contacts import router as contacts_router
 from src.routes.tests import router as tests_router
 from src.routes.auth import router as auth_router
 
-app = FastAPI()
+from fastapi_limiter import FastAPILimiter
+from fastapi_limiter.depends import RateLimiter
+
+import redis.asyncio as redis
+from contextlib import asynccontextmanager
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    r = await redis.Redis(host='localhost', port=6379, db=0, encoding="utf-8", decode_responses=True)
+    await FastAPILimiter.init(r)
+    yield
+    await FastAPILimiter.close()
+
+
+app = FastAPI(lifespan=lifespan)
 
 origins = ["*"]
 
@@ -29,7 +44,7 @@ app.include_router(auth_router, prefix='/api')
 app.include_router(tests_router, prefix='/api')
 
 
-@app.get("/")
+@app.get("/", dependencies=[Depends(RateLimiter(times=2, seconds=5))])
 def root():
     return {"message": "Contacts API"}
 

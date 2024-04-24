@@ -5,9 +5,9 @@ class Settings(BaseSettings):
     # DB
     user: str
     password: str
-    db_name: str
-    domain: str
-    port: str
+    db_name: str = "contacts"
+    domain: str = "localhost"
+    port: str = "5432"
 
     # MAIL
     mail_username: str
@@ -19,8 +19,13 @@ class Settings(BaseSettings):
 
     # JWT
     secret_key: str
-    algorithm: str
-    access_token_expire_minutes: int
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 60
+
+    # REDIS
+    redis_host: str = "localhost"
+    redis_port: int = 6379
+    redis_db: int = 0
 
     @staticmethod
     def get_uri():
